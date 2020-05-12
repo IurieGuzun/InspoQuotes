@@ -34,6 +34,9 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
     override func viewDidLoad() {
         super.viewDidLoad()
         SKPaymentQueue.default().add(self)
+        if  isPurchased() {
+            showPremiumQuotes()
+        }
        
     }
 
@@ -117,6 +120,17 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
     func showPremiumQuotes() {
         quotesToShow.append(contentsOf: premiumQuotes)
         tableView.reloadData()
+    }
+    
+    func isPurchased() -> Bool {
+        let purchaseStatus = UserDefaults.standard.bool(forKey: productID)
+        if purchaseStatus {
+            print("Previously purchased!")
+            return true
+        } else {
+            print("Never purchased!")
+            return false
+        }
     }
     
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
