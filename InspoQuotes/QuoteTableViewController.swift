@@ -74,9 +74,11 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
         if indexPath.row == quotesToShow.count {
             print("Buy!")
             
-            // Next 2 lines should be deleted
+            // Next 3 lines should be deleted
             quotesToShow.append(contentsOf: premiumQuotes)  // <=== Delete this line
             tableView.reloadData()                          // <=== Delete this line
+            UserDefaults.standard.set(true, forKey: "com.IurieGuzun.InspoQuotes.PremiumQuotes") // <=Delete
+            
             
             buyPremiumQuotes()
         }
@@ -101,7 +103,7 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
             if transaction.transactionState == .purchased {
                 // user payment succeeded
                 print("Transaction succeeded!")
-                UserDefaults.standard.set(true, forKey: "com.IurieGuzun.InspoQuotes.PremiumQuotes")
+               
                 
                 showPremiumQuotes()
                 
@@ -115,12 +117,18 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
                     print("Transaction failed due to error: \(errorDescription)")
                 }
                  SKPaymentQueue.default().finishTransaction(transaction)
+            } else if transaction.transactionState == .restored {
+                showPremiumQuotes()
+                 print("Transaction restored!")
+                navigationItem.setRightBarButton(nil, animated: true)
+                 SKPaymentQueue.default().finishTransaction(transaction)
             }
         }
        }
     
     
     func showPremiumQuotes() {
+         UserDefaults.standard.set(true, forKey: "com.IurieGuzun.InspoQuotes.PremiumQuotes")
         quotesToShow.append(contentsOf: premiumQuotes)
         tableView.reloadData()
     }
@@ -137,6 +145,7 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
     }
     
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
+        SKPaymentQueue.default().restoreCompletedTransactions()
         
     }
 
