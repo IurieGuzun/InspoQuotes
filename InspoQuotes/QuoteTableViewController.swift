@@ -51,6 +51,8 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
         if indexPath.row < quotesToShow.count {
         cell.textLabel?.text = quotesToShow[indexPath.row]
         cell.textLabel?.numberOfLines = 0
+            cell.textLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            cell.accessoryType = .none
         } else {
             cell.textLabel?.text = "Get More Quotest!"
             cell.textLabel?.textColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
@@ -65,6 +67,11 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == quotesToShow.count {
             print("Buy!")
+            
+            // Next 2 lines should be deleted
+            quotesToShow.append(contentsOf: premiumQuotes)  // <=== Delete this line
+            tableView.reloadData()                          // <=== Delete this line
+            
             buyPremiumQuotes()
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -88,6 +95,7 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
             if transaction.transactionState == .purchased {
                 // user payment succeeded
                 print("Transaction succeeded!")
+                UserDefaults.standard.set(true, forKey: "com.IurieGuzun.InspoQuotes.PremiumQuotes")
                 
                 showPremiumQuotes()
                 
@@ -108,6 +116,7 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
     
     func showPremiumQuotes() {
         quotesToShow.append(contentsOf: premiumQuotes)
+        tableView.reloadData()
     }
     
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
