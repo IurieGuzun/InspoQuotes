@@ -88,6 +88,9 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
             if transaction.transactionState == .purchased {
                 // user payment succeeded
                 print("Transaction succeeded!")
+                
+                showPremiumQuotes()
+                
                 SKPaymentQueue.default().finishTransaction(transaction)
                 
             } else if transaction.transactionState == .failed {
@@ -101,6 +104,11 @@ class QuoteTableViewController: UITableViewController, SKPaymentTransactionObser
             }
         }
        }
+    
+    
+    func showPremiumQuotes() {
+        quotesToShow.append(contentsOf: premiumQuotes)
+    }
     
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
         
