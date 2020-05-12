@@ -46,6 +46,7 @@ class QuoteTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "QuoteCell", for: indexPath)
 
         cell.textLabel?.text = quotesToShow[indexPath.row]
+        cell.textLabel?.numberOfLines = 0
 
         return cell
     }
