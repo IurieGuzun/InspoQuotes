@@ -9,8 +9,8 @@
 import UIKit
 import StoreKit
 
-class QuoteTableViewController: UITableViewController {
-    
+class QuoteTableViewController: UITableViewController, SKPaymentTransactionObserver {
+   
     let productID = "com.IurieGuzun.InspoQuotes.PremiumQuotes"
     
     var quotesToShow = [
@@ -33,7 +33,7 @@ class QuoteTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        SKPaymentQueue.default().add(self)
        
     }
 
@@ -83,6 +83,17 @@ class QuoteTableViewController: UITableViewController {
             print("User Can't make payments")
         }
     }
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        for transaction in transactions {
+            if transaction.transactionState == .purchased {
+                // user payment succeeded
+                print("Transaction succeeded!")
+            } else if transaction.transactionState == .failed {
+                // payment failed
+                print("Transaction failed!")
+            }
+        }
+       }
     
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
         
